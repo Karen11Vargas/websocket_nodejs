@@ -1,0 +1,31 @@
+{
+  "name": "websocket_nodejs",
+  "version": "1.0.0",
+  "description": "Ejercicio del uso de websocket con express y socket.io",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch scr/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karen11Vargas/websocket_nodejs.git"
+  },
+  "author": "Karen Vargas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Karen11Vargas/websocket_nodejs/issues"
+  },
+  "homepage": "https://github.com/Karen11Vargas/websocket_nodejs#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.1.7",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^6.0.5"
+  }
+}
