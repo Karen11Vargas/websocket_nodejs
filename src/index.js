@@ -19,7 +19,22 @@ app.get('/', (req,res)=>{
 
 //Conexion socket
 io.on("connection", socket=>{
+    //Ver los sockets conectados
+    console.log("Sockets conectados=>", io.engine.clientsCount);
     console.log(socket.id)
+
+    //Se ejecuta cada vez que alguien se desconecte 
+    socket.on("disconnect", () =>{
+        console.log("El socket" + socket.id + "se ha desconectado.")
+    })
+
+    //Capturar updates de intentos de conexion 
+    socket.conn.once("upgrade", () =>{
+        console.log("Se ha pasado la conexion de HTTP Long-Polling a", socket.conn.transport.name);
+        
+    })
+
 })
+
 
 httpServer.listen(3000)
