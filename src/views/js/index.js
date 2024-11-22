@@ -1,29 +1,31 @@
 const socket = io();
 
-//Funciones desde el lado del cliente
-function checkStatus(){
-    console.log("Estado del socket:", socket.connected );
-}
-socket.on("connect", () =>{
-    console.log("Sockets conectados");
-    checkStatus()
+//Recibir emision
+socket.on("welcome", data =>{
+    text.textContent = data;
 })
 
-socket.on("disconnect", () =>{
-    console.log("Sockets desconectado");
-    checkStatus()
+//Emitir evento al servidor 
+const emit_var = document.querySelector("#emit-to-server");
+
+emit_var.addEventListener("click", () =>{
+    socket.emit("hello", "world");
+});
+
+//Recibir de todos
+socket.on("all", message =>{
+    console.log(message);
 })
 
-//Eventos de reconexion 
-socket.io.on("reconnect_attempt", () =>{
-    console.log("Intentando reconectarme");
-})
 
-socket.io.on("reconnect", () =>{
-    console.log("Conectado reconectarme");
-})
+//Emitir mensaje 
+const emit_to_last = document.querySelector("#emit-to-last");
 
-//Error de conexion 
-socket.on("connect_error", () =>{
-    console.log("No se pudo conectarme");
+emit_to_last.addEventListener("click", () =>{
+    socket.emit("last", "Hola ");
+});
+
+//Recibir
+socket.on("saludate", message =>{
+    console.log(message);
 })

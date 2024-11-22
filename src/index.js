@@ -1,5 +1,4 @@
 //Importar express, http y socket 
-const { Socket } = require("dgram");
 const express = require("express");
 const {createServer} = require("http");
 const path = require("path");
@@ -8,6 +7,8 @@ const {Server} = require("socket.io");
 const app  = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
+
+const socketsOnline = [];
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, "views")))
@@ -19,21 +20,29 @@ app.get('/', (req,res)=>{
 
 //Conexion socket
 io.on("connection", socket=>{
-    //Ver los sockets conectados
-    console.log("Sockets conectados=>", io.engine.clientsCount);
-    console.log(socket.id)
+    
+    //Guardar socket conectado 
+    socketsOnline.push(socket.id);
 
-    //Se ejecuta cada vez que alguien se desconecte 
-    socket.on("disconnect", () =>{
-        console.log("El socket" + socket.id + "se ha desconectado.")
+    //Emision basica
+    socket.emit("welcome", "Ahora estas conectado");
+
+    //Recibir emision 
+    socket.on("hello", (arg) => {
+        console.log(arg); // world
+    });
+
+    //Enviar a todos
+    io.emit("all", "Hola a todos" + socket.id)
+
+    //Recibir evento
+    socket.on("last", message =>{
+
+        const lastSocket = socketsOnline[socketsOnline.length - 1];
+
+        //emitir saludo a solo un socket 
+        io.to(lastSocket).emit("saludate", message);
     })
-
-    //Capturar updates de intentos de conexion 
-    socket.conn.once("upgrade", () =>{
-        console.log("Se ha pasado la conexion de HTTP Long-Polling a", socket.conn.transport.name);
-        
-    })
-
 })
 
 
