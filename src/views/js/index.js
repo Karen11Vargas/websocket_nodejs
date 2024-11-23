@@ -1,31 +1,38 @@
 const socket = io();
+const circle = document.querySelector('#circle')
 
-//Recibir emision
-socket.on("welcome", data =>{
-    text.textContent = data;
+
+
+// mover circulo
+const drawCircle = position =>{
+    circle.style.top = position.top
+    circle.style.left = position.left
+}
+
+// capturar posiciones
+const drag = (e) => {
+ 
+  const position = {
+    top: e.clientY + 'px',
+    left : e.clientX + 'px'
+  }
+
+  drawCircle(position)
+  socket.emit("circle position", position);
+
+}
+
+// se mueve cuando el mouse este presionado
+document.addEventListener('mousedown', (e) => {
+  document.addEventListener('mousemove', drag)
 })
 
-//Emitir evento al servidor 
-const emit_var = document.querySelector("#emit-to-server");
-
-emit_var.addEventListener("click", () =>{
-    socket.emit("hello", "world");
-});
-
-//Recibir de todos
-socket.on("all", message =>{
-    console.log(message);
+// se deja de mover cuando se levante el mouse
+document.addEventListener('mouseup', (e) => {
+  document.removeEventListener('mousemove', drag)
 })
 
-
-//Emitir mensaje 
-const emit_to_last = document.querySelector("#emit-to-last");
-
-emit_to_last.addEventListener("click", () =>{
-    socket.emit("last", "Hola ");
-});
-
-//Recibir
-socket.on("saludate", message =>{
-    console.log(message);
+//Escuchar evento de mover el circulo
+socket.on("move circle", position =>{
+  drawCircle(position)
 })

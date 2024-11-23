@@ -8,7 +8,6 @@ const app  = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-const socketsOnline = [];
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, "views")))
@@ -21,28 +20,17 @@ app.get('/', (req,res)=>{
 //Conexion socket
 io.on("connection", socket=>{
     
-    //Guardar socket conectado 
-    socketsOnline.push(socket.id);
+    //Recibir evento del circulo
+    socket.on("circle position", position =>{
+        // //Enviar evento a todos
+        // io.emit("move circle", position)
 
-    //Emision basica
-    socket.emit("welcome", "Ahora estas conectado");
-
-    //Recibir emision 
-    socket.on("hello", (arg) => {
-        console.log(arg); // world
-    });
-
-    //Enviar a todos
-    io.emit("all", "Hola a todos" + socket.id)
-
-    //Recibir evento
-    socket.on("last", message =>{
-
-        const lastSocket = socketsOnline[socketsOnline.length - 1];
-
-        //emitir saludo a solo un socket 
-        io.to(lastSocket).emit("saludate", message);
+        //Enviar a todo menos a mi
+        socket.broadcast.emit("move circle", position)
     })
+
+
+  
 })
 
 
