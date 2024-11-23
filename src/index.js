@@ -1,3 +1,7 @@
+//Activar el debuggin
+process.env.DEBUG = "socket.io:socket";
+
+
 //Importar express, http y socket 
 const express = require("express");
 const {createServer} = require("http");
