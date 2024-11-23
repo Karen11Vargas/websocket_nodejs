@@ -25,6 +25,21 @@ app.get('/chat', (req,res)=>{
     res.sendFile(__dirname + "/views/chat.html");
 })
 
+//Ejecutar un middleware antes de la conexion
+io.use((socket, next) =>{
+    
+    const token = socket.handshake.auth.token;
+
+    if (token == "hola") {
+        next();
+    }else{
+        const err = new Error("No puede pasar")
+        err.data = {
+            details: "No pudo ser autenticado"
+        }
+        next(err)
+    }
+});
 
 //Conexion socket
 io.on("connection", socket=>{

@@ -1,6 +1,17 @@
-const socket = io();
-const circle = document.querySelector('#circle')
+//Envio de token para el middleware
+const socket = io({
+  auth:{
+    token: "hola"
+  }
+});
 
+//En caso de error en conexion
+socket.on("connect_error", err =>{
+  console.log(err.message);
+  console.log(err.data.details);
+})
+
+const circle = document.querySelector('#circle')
 
 // mover circulo
 const drawCircle = position =>{
@@ -17,7 +28,10 @@ const drag = (e) => {
   }
 
   drawCircle(position)
-  socket.emit("circle position", position);
+  console.log("Se envia evento al servidor")
+
+  //Implmentando evento volatil
+  socket.volatile.emit("circle position", position);
 
 }
 
