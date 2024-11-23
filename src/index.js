@@ -1,17 +1,28 @@
-//Activar el debuggin
-process.env.DEBUG = "socket.io:socket";
-
-
 //Importar express, http y socket 
 const express = require("express");
 const {createServer} = require("http");
 const path = require("path");
 const {Server} = require("socket.io");
 
+//Importar funcion de la libreria UI
+const {instrument} = require("@socket.io/admin-ui");
+
 const app  = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+    cors:{
+        origin:["https://admin.socket.io"],
+        credentials: true
+    }
+});
 
+instrument(io, {
+    auth: {
+        type: "basic",
+        username: "admin",
+        password: "$2y$10$PP9lSxE4orAtJrYZZTHTYOBlcJMFNSNk3I.UCC0Yrv2W7acKgHYYO"
+    }
+})
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, "views")))
