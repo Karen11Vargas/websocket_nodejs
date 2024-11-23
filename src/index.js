@@ -20,6 +20,12 @@ app.get('/', (req,res)=>{
 app.get('/salas', (req,res)=>{
     res.sendFile(__dirname + "/views/salas.html");
 })
+
+app.get('/chat', (req,res)=>{
+    res.sendFile(__dirname + "/views/chat.html");
+})
+
+
 //Conexion socket
 io.on("connection", socket=>{
     
@@ -69,5 +75,24 @@ io.on("connection", socket=>{
   
 })
 
+//Crear los namesspaces
+const teachers = io.of("teachers")
+const students = io.of("students")
 
+//Conectar
+teachers.on("connection", socket =>{
+    console.log(socket.id + "se ha conectado a la sala de profes");
+
+    socket.on("send message", data =>{
+        teachers.emit("message", data);
+    });
+})
+
+students.on("connection", socket =>{
+    console.log(socket.id + "se ha conectado a la sala de estudiantes");
+    
+    socket.on("send message", data =>{
+        students.emit("message", data);
+    })
+})
 httpServer.listen(3000)
