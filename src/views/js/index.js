@@ -2,7 +2,6 @@ const socket = io();
 const circle = document.querySelector('#circle')
 
 
-
 // mover circulo
 const drawCircle = position =>{
     circle.style.top = position.top
